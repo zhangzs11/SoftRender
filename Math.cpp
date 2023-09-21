@@ -1,11 +1,11 @@
-#include"Math.h"
+ï»¿#include"Math.h"
 VECTOR3::VECTOR3(float x, float y, float z)
 {
 	this->x = x;
 	this->y = y;
 	this->z = z;
 }
-//ÖØÔØÔËËã·û
+//Ã–Ã˜Ã”Ã˜Ã”Ã‹Ã‹Ã£Â·Ã»
 VECTOR3 VECTOR3::operator + (VECTOR3 vec)
 {
 	VECTOR3 res;
@@ -52,8 +52,6 @@ VECTOR4::VECTOR4(float x, float y, float z, float w)
 	this->z = z;
 	this->w = w;
 }
-
-//ÖØÔØÔËËã·û
 VECTOR4 VECTOR4::operator + (VECTOR4 vec)
 {
 	VECTOR4 res;
@@ -422,7 +420,7 @@ MATRIX MatrixScalling(float sx, float sy, float sz)
 MATRIX MatrixLookAtLH(VECTOR4* pEye, VECTOR4* pAt, VECTOR4* pUp)
 {
 	MATRIX res;
-	//ÏÈ¼ÆËã³öÊÓÍ¼Æ¬¿Õ¼ä¸÷×ø±êÖáµÄÏòÁ¿£¬µ¥Î»ÏòÁ¿
+	//å…ˆè®¡ç®—å‡ºè§†å›¾ç‰‡ç©ºé—´å„åæ ‡è½´çš„å‘é‡ï¼Œå•ä½å‘é‡
 	VECTOR4 temp = *pAt - *pEye;
 	VECTOR4 cameraZaxis = Vec4Normalize(&temp);
 	temp = Vec4Cross(pUp, &cameraZaxis);
@@ -462,7 +460,7 @@ MATRIX MatrixPerspectiveLH(float fovy, float Aspect, float zn, float zf)
 VECTOR4 Wnormalization(VECTOR4* pv)
 {
 	VECTOR4 res;
-	res.w = 1 / pv->z;//´æ¶¥µãÔÚÍ¸ÊÓ¿Õ¼äµÄ1/z£¬ÓÃÓÚºóĞøÍ¸ÊÓ½ÃÕı
+	res.w = 1 / pv->z;//å­˜é¡¶ç‚¹åœ¨é€è§†ç©ºé—´çš„1/zï¼Œç”¨äºåç»­é€è§†çŸ«æ­£
 	res.x = pv->x / pv->w;
 	res.y = pv->y / pv->w;
 	res.z = pv->z / pv->w;
@@ -477,9 +475,9 @@ VECTOR3 Vec4toVec2d(VECTOR4 vec4)
 	vec3.z = 1;
 	return vec3;
 }
-float CalPlanePointZ(VECTOR4 v1, VECTOR4 v2, VECTOR4 v3, VECTOR4 vp)//ÒÑÖªÈıµã×ø±ê£¬ ÇóÃæÉÏÁíÒ»µãÒÑÖªx£¬yµÄ×ø±êµÄz
+float CalPlanePointZ(VECTOR4 v1, VECTOR4 v2, VECTOR4 v3, VECTOR4 vp)//å·²çŸ¥ä¸‰ç‚¹åæ ‡ï¼Œæ±‚é¢ä¸Šå¦ä¸€ç‚¹å·²çŸ¥xï¼Œyçš„åæ ‡çš„z
 {
-	//ÇóÆ½Ãæ·¨ÏòÁ¿
+	//æ±‚å¹³é¢æ³•å‘é‡
 	float na = (v2.y - v1.y) * (v3.z - v1.z) - (v2.z - v1.z) * (v3.y - v1.y);
 	float nb = (v2.z - v1.z) * (v3.x - v1.x) - (v2.x - v1.x) * (v3.z - v1.z);
 	float nc = (v2.x - v1.x) * (v3.y - v1.y) - (v2.y - v1.y) * (v3.x - v1.x);
@@ -490,11 +488,11 @@ float CalPlanePointZ(VECTOR4 v1, VECTOR4 v2, VECTOR4 v3, VECTOR4 vp)//ÒÑÖªÈıµã×ø
 	}
 	else
 	{
-		vp.z = 1;//Æ½ÃæÆ½ĞĞÓÚzÖá£¬Ö¸¶¨x¡¢yºó£¬zÓĞÎŞÊı¸öÖµ
+		vp.z = 1;//å¹³é¢å¹³è¡Œäºzè½´ï¼ŒæŒ‡å®šxã€yåï¼Œzæœ‰æ— æ•°ä¸ªå€¼
 	}
 	return vp.z;
 }
-VECTOR4 BarycentricCoordinate(VECTOR4 A, VECTOR4 B, VECTOR4 C, VECTOR4 point)//¼ÆËãÈı½ÇĞÎÄ³Ò»µãµÄÖØĞÄ×ø±ê
+VECTOR4 BarycentricCoordinate(VECTOR4 A, VECTOR4 B, VECTOR4 C, VECTOR4 point)//è®¡ç®—ä¸‰è§’å½¢æŸä¸€ç‚¹çš„é‡å¿ƒåæ ‡
 {
 	float a = (-(point.x - B.x) * (C.y - B.y) + (point.y - B.y) * (C.x - B.x)) / (-(A.x - B.x) * (C.y - B.y) + (A.y - B.y) * (C.x - B.x));
 	float b = (-(point.x - C.x) * (A.y - C.y) + (point.y - C.y) * (A.x - C.x)) / (-(B.x - C.x) * (A.y - C.y) + (B.y - C.y) * (A.x - C.x));
@@ -502,7 +500,7 @@ VECTOR4 BarycentricCoordinate(VECTOR4 A, VECTOR4 B, VECTOR4 C, VECTOR4 point)//¼
 	return VECTOR4(a, b, y, 1);
 }
 
-float CalTriangleArea(VECTOR4 a, VECTOR4 b, VECTOR4 c)//¼ÆËãÈı½ÇĞÎµÄÃæ»ı
+float CalTriangleArea(VECTOR4 a, VECTOR4 b, VECTOR4 c)//è®¡ç®—ä¸‰è§’å½¢çš„é¢ç§¯
 {
 	float side[3];
 	side[0] = sqrt(pow(a.x - b.x, 2) + pow(a.y - b.y, 2) + pow(a.z - b.z, 2));

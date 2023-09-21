@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include<iostream>
 #include<fstream>
 #include<windows.h>
@@ -174,7 +174,7 @@ public:
 	UINT primative;
 	Texture2D texturesource;
 	Texture2D normaltexturesource;
-	Mesh* meshsource;//¶ÁÈ¡µÄÄ£ĞÍ×ÊÔ´
+	Mesh* meshsource;//è¯»å–çš„æ¨¡å‹èµ„æº
 
 	int rendermodel=1;
 }DeviceContext;
@@ -186,7 +186,7 @@ public:
 	UINT Width = 0;
 	UINT Height = 0;
 	UINT RefreshRate = 60;
-	HWND OutputWindow;//×÷ÏÔÊ¾µÄ´°¿Ú¾ä±ú
+	HWND OutputWindow;//ä½œæ˜¾ç¤ºçš„çª—å£å¥æŸ„
 }SWAP_CHAIN_DESC;
 typedef struct SwapChain
 {
@@ -208,14 +208,14 @@ public:
 	Device* device;
 	DeviceContext* devicecontext;
 }Renderer;
-void DDA_Line(int x1, int x2, int y1, int y2, COLOR color1, COLOR color2, DeviceContext* devicecontext);//DDA»­ÏßËã·¨
-bool isPointInTrangle(VECTOR4 point, VECTOR4 a, VECTOR4 b, VECTOR4 c);//²æ³ËÅĞ¶ÏµãÊÇ·ñÔÚÈı½ÇĞÎÄÚ²¿
+void DDA_Line(int x1, int x2, int y1, int y2, COLOR color1, COLOR color2, DeviceContext* devicecontext);//DDAç”»çº¿ç®—æ³•
+bool isPointInTrangle(VECTOR4 point, VECTOR4 a, VECTOR4 b, VECTOR4 c);//å‰ä¹˜åˆ¤æ–­ç‚¹æ˜¯å¦åœ¨ä¸‰è§’å½¢å†…éƒ¨
 SimpleVertex wviewport(SimpleVertex input);
-bool ClipSpaceCull(VECTOR4 v1, VECTOR4 v2, VECTOR4 v3, float Near, float Far);//ÊÇ·ñÈı½ÇĞÎÖÁÉÙÓĞÒ»²¿·ÖÔÚÆÁÄ»ÄÚ
-bool FaceCull(VECTOR4 v1, VECTOR4 v2, VECTOR4 v3);//ÊÇ·ñ±³ÃæÌŞ³ı
-bool Inside(VECTOR4 line, VECTOR4 p);//ÅĞ¶ÏµãÊÇ·ñÔÚÆ½ÃæÄÚ£¬Í¨¹ı¿´µãºÍÆ½ÃæµÄ¾àÀëd£¬d>0ÔòÔÚÆ½Ãæ·¨ÏòÁ¿ËùÖ¸µÄÇøÓòÄÚ
-SimpleVertex Intersect(SimpleVertex v1, SimpleVertex v2, VECTOR4 line);//ÇóµãÓëÏß¶ÎµÄ½»µã£¬Í¨¹ı¶Ëµã²åÖµ
+bool ClipSpaceCull(VECTOR4 v1, VECTOR4 v2, VECTOR4 v3, float Near, float Far);//æ˜¯å¦ä¸‰è§’å½¢è‡³å°‘æœ‰ä¸€éƒ¨åˆ†åœ¨å±å¹•å†…
+bool FaceCull(VECTOR4 v1, VECTOR4 v2, VECTOR4 v3);//æ˜¯å¦èƒŒé¢å‰”é™¤
+bool Inside(VECTOR4 line, VECTOR4 p);//åˆ¤æ–­ç‚¹æ˜¯å¦åœ¨å¹³é¢å†…ï¼Œé€šè¿‡çœ‹ç‚¹å’Œå¹³é¢çš„è·ç¦»dï¼Œd>0åˆ™åœ¨å¹³é¢æ³•å‘é‡æ‰€æŒ‡çš„åŒºåŸŸå†…
+SimpleVertex Intersect(SimpleVertex v1, SimpleVertex v2, VECTOR4 line);//æ±‚ç‚¹ä¸çº¿æ®µçš„äº¤ç‚¹ï¼Œé€šè¿‡ç«¯ç‚¹æ’å€¼
 bool AllVertexInside(Triangle input, float Near, float Far);
-std::vector<Triangle> SutherlandHodgeman(std::vector<Triangle> input, float Near, float Far);//ÊäÈëµ±Ç°Ö¡µÄËùÓĞÈı½ÇĞÎÁĞ±í£¬ Êä³ö²Ã¼ôºóµÄÈı½ÇĞÎÁĞ±í
+std::vector<Triangle> SutherlandHodgeman(std::vector<Triangle> input, float Near, float Far);//è¾“å…¥å½“å‰å¸§çš„æ‰€æœ‰ä¸‰è§’å½¢åˆ—è¡¨ï¼Œè¾“å‡ºè£å‰ªåçš„ä¸‰è§’å½¢åˆ—è¡¨
 void StringSplit(std::string s, char splitchar, std::vector<std::string>& vec);
 void ReadObjFile(std::string path, Mesh* obj);

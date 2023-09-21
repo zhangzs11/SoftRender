@@ -1,4 +1,4 @@
-#include"Graphics.h"
+ï»¿#include"Graphics.h"
 void Texture2D::Release()
 {}
 void RenderTargetView::Release()
@@ -13,7 +13,7 @@ void VIEWPORT::Release()
 {
 
 }
-HRESULT Device::CreateRenderTargetView(Texture2D* pTexture, RenderTargetView** ppRTView)//´´½¨äÖÈ¾Ä¿±êÊÓÍ¼
+HRESULT Device::CreateRenderTargetView(Texture2D* pTexture, RenderTargetView** ppRTView)//åˆ›å»ºæ¸²æŸ“ç›®æ ‡è§†å›¾
 {
 	*ppRTView = new RenderTargetView();
 	(*ppRTView)->texture2d = pTexture;
@@ -56,16 +56,16 @@ void Device::Release()
 {
 
 }
-void DeviceContext::SetRenderTarget(UINT NumViews, RenderTargetView* ppRenderTargetViews, DepthStencilView* pDepthStencilView)//ÉèÖÃÒªäÖÈ¾µ½µÄÄÇ¸öÄ¿±êÊÓÍ¼
+void DeviceContext::SetRenderTarget(UINT NumViews, RenderTargetView* ppRenderTargetViews, DepthStencilView* pDepthStencilView)//è®¾ç½®è¦æ¸²æŸ“åˆ°çš„é‚£ä¸ªç›®æ ‡è§†å›¾
 {
 	this->rendertargetview = ppRenderTargetViews;
 	this->depthstencilview = pDepthStencilView;
 }
-void DeviceContext::SetViewports(UINT numviewports, VIEWPORT* pViewports)//ÉèÖÃÊÓ´°·¶Î§
+void DeviceContext::SetViewports(UINT numviewports, VIEWPORT* pViewports)//è®¾ç½®è§†çª—èŒƒå›´
 {
 	this->viewport = pViewports;
 }
-void DeviceContext::SetVertexBuffer(UINT Numbuffers, Buffer* const* ppVertexBuffers, const UINT* pStrides, const UINT* pOffsets)//ÉèÖÃ¶¥µã»º³å
+void DeviceContext::SetVertexBuffer(UINT Numbuffers, Buffer* const* ppVertexBuffers, const UINT* pStrides, const UINT* pOffsets)//è®¾ç½®é¡¶ç‚¹ç¼“å†²
 {
 	this->vertexbuffer = *ppVertexBuffers;
 }
@@ -77,7 +77,7 @@ void DeviceContext::SetConstantBuffer(UINT StartSlot, UINT NumBuffers, Buffer* c
 {
 	this->constantbuffer = *ppConstantBuffers;
 }
-void DeviceContext::SetPrimitiveTopology(UINT primitive)//ÉèÖÃÍ¼ÔªÀàĞÍ
+void DeviceContext::SetPrimitiveTopology(UINT primitive)//è®¾ç½®å›¾å…ƒç±»å‹
 {
 	this->primative = primitive;
 }
@@ -92,7 +92,7 @@ void DeviceContext::Draw()
 }
 void DeviceContext::DarwIndexed(UINT IndexCount, UINT startIndexLocation, UINT BaseVertexLocation)
 {
-	UINT* pindexdata = (UINT*)(this->indexbuffer->data.pSyMem);//µ±Ç°Ñ­»·µÄË÷Òı
+	UINT* pindexdata = (UINT*)(this->indexbuffer->data.pSyMem);//å½“å‰å¾ªç¯çš„ç´¢å¼•
 	SimpleVertex* pvertexdata = (SimpleVertex*)(this->vertexbuffer->data.pSyMem);
 	UINT index;
 	UINT index_2;
@@ -103,7 +103,7 @@ void DeviceContext::DarwIndexed(UINT IndexCount, UINT startIndexLocation, UINT B
 	VECTOR4 point;
 	std::vector<Triangle> triangleVector;
 	triangleVector.clear();
-	for (int i = 0; i < IndexCount; i++) {//±éÀúË÷Òı£¬»ñµÃÒ»¸ö¾­¹ıÍ¸ÊÓ±ä»»µÄÈı½ÇĞÎÁĞ±í
+	for (int i = 0; i < IndexCount; i++) {//éå†ç´¢å¼•ï¼Œè·å¾—ä¸€ä¸ªç»è¿‡é€è§†å˜æ¢çš„ä¸‰è§’å½¢åˆ—è¡¨
 		if ((i + 1) % 3 == 0) {
 			index_2 = *(pindexdata + i - 2);
 			vertex_2 = *(pvertexdata + index_2);
@@ -124,17 +124,17 @@ void DeviceContext::DarwIndexed(UINT IndexCount, UINT startIndexLocation, UINT B
 			triangleVector.push_back(triangle);
 		}
 	}
-	//²Ã¼ô
+	//è£å‰ª
 	float Near = 0.01;
 	float Far = 50;
 	triangleVector = SutherlandHodgeman(triangleVector, Near, Far);
 	int trianglesize = triangleVector.size();
-	//Í¸ÊÓ³ı·¨£¬»­Èı½ÇĞÎºÍÏß¿ò
+	//é€è§†é™¤æ³•ï¼Œç”»ä¸‰è§’å½¢å’Œçº¿æ¡†
 	for (int i = 0; i < trianglesize; i++) {
 		for (int j = 0; j < 3; j++) {
 			triangleVector[i].vertex[j] = wviewport(triangleVector[i].vertex[j]);
 		}
-		if (!FaceCull(triangleVector[i].vertex[0].Pos, triangleVector[i].vertex[1].Pos, triangleVector[i].vertex[2].Pos)) {//±³ÃæÌŞ³ı
+		if (!FaceCull(triangleVector[i].vertex[0].Pos, triangleVector[i].vertex[1].Pos, triangleVector[i].vertex[2].Pos)) {//èƒŒé¢å‰”é™¤
 			drawTriangle(triangleVector[i].vertex[0], triangleVector[i].vertex[1], triangleVector[i].vertex[2]);
 		}
 		DDA_Line(triangleVector[i].vertex[0].Pos.x, triangleVector[i].vertex[1].Pos.x, triangleVector[i].vertex[0].Pos.y, triangleVector[i].vertex[1].Pos.y, COLOR(0, 255, 0, 1), COLOR(0, 255, 0, 1), this);
@@ -145,12 +145,12 @@ void DeviceContext::DarwIndexed(UINT IndexCount, UINT startIndexLocation, UINT B
 void DeviceContext::DrawMesh()
 {
 	VECTOR4 temp;
-	Mesh* meshdata = this->meshsource;//Ä£ĞÍÎÄ¼şËùÓĞĞÅÏ¢
-	std::vector<Triangle> triangleVector;//Èı½ÇĞÎÁĞ±í
+	Mesh* meshdata = this->meshsource;//æ¨¡å‹æ–‡ä»¶æ‰€æœ‰ä¿¡æ¯
+	std::vector<Triangle> triangleVector;//ä¸‰è§’å½¢åˆ—è¡¨
 	
 	int indexBuffersize = meshdata->indexBuffer.size();
-	for (int i = 0; i < indexBuffersize; i++) {//Ñ­»·Ã¿Ò»ĞĞ£¬Ò²¾ÍÊÇÃ¿Ò»¸öÃæ
-		for (int m = 0; m < meshdata->indexBuffer[i].size() - 2; m++) {//Ñ­»·Ã¿Ò»¸öÈı½ÇĞÎ
+	for (int i = 0; i < indexBuffersize; i++) {//å¾ªç¯æ¯ä¸€è¡Œï¼Œä¹Ÿå°±æ˜¯æ¯ä¸€ä¸ªé¢
+		for (int m = 0; m < meshdata->indexBuffer[i].size() - 2; m++) {//å¾ªç¯æ¯ä¸€ä¸ªä¸‰è§’å½¢
 			SimpleVertex v1;
 			SimpleVertex v2;
 			SimpleVertex v3;
@@ -177,7 +177,7 @@ void DeviceContext::DrawMesh()
 			VECTOR4 deltaUV1;
 			VECTOR4 deltaUV2;
 			float f;
-			//Çóv1µÄÇĞÏßºÍ¸±ÇĞÏß
+			//æ±‚v1çš„åˆ‡çº¿å’Œå‰¯åˆ‡çº¿
 			edge1 = v3.Pos - v1.Pos;
 			edge2 = v2.Pos - v1.Pos;
 			temp = v3.uv - v1.uv;
@@ -201,7 +201,7 @@ void DeviceContext::DrawMesh()
 			bitangent = Vec4Normalize(&temp);
 			v1.tangent = tangent;
 			v1.bitangent = bitangent;
-			//Çóv2µÄÇĞÏßºÍ¸±ÇĞÏß
+			//æ±‚v2çš„åˆ‡çº¿å’Œå‰¯åˆ‡çº¿
 			edge1 = v1.Pos - v2.Pos;
 			edge2 = v3.Pos - v2.Pos;
 			temp = v1.uv - v2.uv;
@@ -225,7 +225,7 @@ void DeviceContext::DrawMesh()
 			bitangent = Vec4Normalize(&temp);
 			v2.tangent = tangent;
 			v2.bitangent = bitangent;
-			//Çóv3µÄÇĞÏßºÍ¸±ÇĞÏß
+			//æ±‚v3çš„åˆ‡çº¿å’Œå‰¯åˆ‡çº¿
 			edge1 = v2.Pos - v3.Pos;
 			edge2 = v1.Pos - v3.Pos;
 			temp = v2.uv - v3.uv;
@@ -261,18 +261,18 @@ void DeviceContext::DrawMesh()
 			triangleVector.push_back(triangle);
 		}
 	}
-	//²Ã¼ô
-	float Near = 0.01;//½üÆ½Ãæ
-	float Far = 50;//Ô¶Æ½Ãæ
+	//è£å‰ª
+	float Near = 0.01;
+	float Far = 50;
 	triangleVector = SutherlandHodgeman(triangleVector, Near, Far);
 	int trianglesize = triangleVector.size();
 
-	//Í¸ÊÓ³ı·¨£¬»­Èı½ÇĞÎºÍÏß¿ò
+	//é€è§†é™¤æ³•ï¼Œç”»ä¸‰è§’å½¢å’Œçº¿æ¡†
 	for (int i = 0; i < trianglesize; i++) {
 		for (int j = 0; j < 3; j++) {
 			triangleVector[i].vertex[j] = wviewport(triangleVector[i].vertex[j]);
 		}
-		if (!FaceCull(triangleVector[i].vertex[0].Pos, triangleVector[i].vertex[1].Pos, triangleVector[i].vertex[2].Pos)) {//±³ÃæÌŞ³ı
+		if (!FaceCull(triangleVector[i].vertex[0].Pos, triangleVector[i].vertex[1].Pos, triangleVector[i].vertex[2].Pos)) {//èƒŒé¢å‰”é™¤
 			if (this->rendermodel == 2 || this->rendermodel == 3) {
 				drawTriangle(triangleVector[i].vertex[0], triangleVector[i].vertex[1], triangleVector[i].vertex[2]);
 			}
@@ -306,7 +306,7 @@ void DeviceContext::fillBottomFlatTriangle(SimpleVertex v1, SimpleVertex v2, Sim
 	float curx1 = v1.Pos.x;
 	float curx2 = v1.Pos.x;
 
-	if (invslope1 > invslope2) {//invslope1,v2´ú±í×ó±ßµÄ±ß
+	if (invslope1 > invslope2) {//invslope1,v2ä»£è¡¨å·¦è¾¹çš„è¾¹
 		float temp;
 		temp = invslope1;
 		invslope1 = invslope2;
@@ -321,37 +321,37 @@ void DeviceContext::fillBottomFlatTriangle(SimpleVertex v1, SimpleVertex v2, Sim
 	float dxdenominator = dx.x * v1.Pos.w + dx.y * v2.Pos.w + dx.z * v3.Pos.w;
 	float dydenominator = dy.x * v1.Pos.w + dy.y * v2.Pos.w + dy.z * v3.Pos.w;
 
-	//³õÊ¼uv
+	//åˆå§‹uv
 	VECTOR4 uv = v1.uv;
 	VECTOR4 uvnumerator = v1.uv * v1.Pos.w;
 	float uvdenominator = v1.Pos.w;
-	//¿¼ÂÇÍ¸ÊÓ½ÃÕıËãuvÔöÁ¿
-	VECTOR4 uvdxnnumerator = v1.uv * v1.Pos.w * dx.x + v2.uv * v2.Pos.w * dx.y + v3.uv * v3.Pos.w * dx.z;//uvÔÚxÔöÁ¿
-	VECTOR4 uvdynnumerator = v1.uv * v1.Pos.w * dy.x + v2.uv * v2.Pos.w * dy.y + v3.uv * v3.Pos.w * dy.z;//uvÔÚyÔöÁ¿
+	//è€ƒè™‘é€è§†çŸ«æ­£ç®—uvå¢é‡
+	VECTOR4 uvdxnnumerator = v1.uv * v1.Pos.w * dx.x + v2.uv * v2.Pos.w * dx.y + v3.uv * v3.Pos.w * dx.z;//uvåœ¨xå¢é‡
+	VECTOR4 uvdynnumerator = v1.uv * v1.Pos.w * dy.x + v2.uv * v2.Pos.w * dy.y + v3.uv * v3.Pos.w * dy.z;//uvåœ¨yå¢é‡
 
-	//³õÊ¼normal
+	//åˆå§‹normal
 	VECTOR4 Normal = v1.Normal;
 	VECTOR4 Normalnumerator = v1.Normal * v1.Pos.w;
 	float Normaldenominator = v1.Pos.w;
-	//¿¼ÂÇÍ¸ÊÓ½ÃÕıËãnormalÔöÁ¿
-	VECTOR4 Normaldxnnumerator = v1.Normal * v1.Pos.w * dx.x + v2.Normal * v2.Pos.w * dx.y + v3.Normal * v3.Pos.w * dx.z;//normalÔÚxÔöÁ¿
-	VECTOR4 Normaldynnumerator = v1.Normal * v1.Pos.w * dy.x + v2.Normal * v2.Pos.w * dy.y + v3.Normal * v3.Pos.w * dy.z;//normalÔÚyÔöÁ¿
+	//è€ƒè™‘é€è§†çŸ«æ­£ç®—normalå¢é‡
+	VECTOR4 Normaldxnnumerator = v1.Normal * v1.Pos.w * dx.x + v2.Normal * v2.Pos.w * dx.y + v3.Normal * v3.Pos.w * dx.z;//normalåœ¨xå¢é‡
+	VECTOR4 Normaldynnumerator = v1.Normal * v1.Pos.w * dy.x + v2.Normal * v2.Pos.w * dy.y + v3.Normal * v3.Pos.w * dy.z;//normalåœ¨yå¢é‡
 
-	//³õÊ¼ÊÀ½ç×ø±ê
+	//åˆå§‹ä¸–ç•Œåæ ‡
 	VECTOR4 Pos = v1.PosWorld;
 	VECTOR4 Posnumerator = v1.PosWorld * v1.Pos.w;
 	float Posdenominator = v1.Pos.w;
-	//¿¼ÂÇÍ¸ÊÓ½ÃÕıËãÊÀ½ç×ø±êÔöÁ¿
-	VECTOR4 Posdxnnumerator = v1.PosWorld * v1.Pos.w * dx.x + v2.PosWorld * v2.Pos.w * dx.y + v3.PosWorld * v3.Pos.w * dx.z;//ÊÀ½ç×ø±êÔÚxÔöÁ¿
-	VECTOR4 Posdynnumerator = v1.PosWorld * v1.Pos.w * dy.x + v2.PosWorld * v2.Pos.w * dy.y + v3.PosWorld * v3.Pos.w * dy.z;//ÊÀ½ç×ø±êÔÚyÔöÁ¿
+	//è€ƒè™‘é€è§†çŸ«æ­£ç®—ä¸–ç•Œåæ ‡å¢é‡
+	VECTOR4 Posdxnnumerator = v1.PosWorld * v1.Pos.w * dx.x + v2.PosWorld * v2.Pos.w * dx.y + v3.PosWorld * v3.Pos.w * dx.z;//ä¸–ç•Œåæ ‡åœ¨xå¢é‡
+	VECTOR4 Posdynnumerator = v1.PosWorld * v1.Pos.w * dy.x + v2.PosWorld * v2.Pos.w * dy.y + v3.PosWorld * v3.Pos.w * dy.z;//ä¸–ç•Œåæ ‡åœ¨yå¢é‡
 
-	//³õÊ¼TBN¾ØÕó
+	//åˆå§‹TBNçŸ©é˜µ
 	MATRIX TBN = v1.TBN;
 	MATRIX TBNnumerator = v1.TBN * v1.Pos.w;
 	float TBNdenominator = v1.Pos.w;
-	//¿¼ÂÇÍ¸ÊÓ½ÃÕıËãTBNÔöÁ¿
-	MATRIX TBNdxnnumerator = v1.TBN * v1.Pos.w * dx.x + v2.TBN * v2.Pos.w * dx.y + v3.TBN * v3.Pos.w * dx.z;//TBNÔÚxÔöÁ¿
-	MATRIX TBNdynnumerator = v1.TBN * v1.Pos.w * dy.x + v2.TBN * v2.Pos.w * dy.y + v3.TBN * v3.Pos.w * dy.z;//TBNÔÚyÔöÁ¿
+	//è€ƒè™‘é€è§†çŸ«æ­£ç®—TBNå¢é‡
+	MATRIX TBNdxnnumerator = v1.TBN * v1.Pos.w * dx.x + v2.TBN * v2.Pos.w * dx.y + v3.TBN * v3.Pos.w * dx.z;//TBNåœ¨xå¢é‡
+	MATRIX TBNdynnumerator = v1.TBN * v1.Pos.w * dy.x + v2.TBN * v2.Pos.w * dy.y + v3.TBN * v3.Pos.w * dy.z;//TBNåœ¨yå¢é‡
 
 	float ymax = min(v2.Pos.y, v3.Pos.y);
 	for (int scanlineY = floor(v1.Pos.y); scanlineY < floor(ymax); scanlineY++) {
@@ -389,11 +389,11 @@ void DeviceContext::fillBottomFlatTriangle(SimpleVertex v1, SimpleVertex v2, Sim
 			TBN = TBNnumerator / TBNdenominator;
 			if (x > 0 && x < 1024 && scanlineY>0 && scanlineY < 768) {
 				if (uv.x >= 0 && uv.x <= 1 && uv.y >= 0 && uv.y <= 1) {
-					int z = (int)(CalPlanePointZ(v1.Pos, v2.Pos, v3.Pos, VECTOR4(x, scanlineY, 1, 1))*10000000);//¼ÆËã¸ÃÏñËØµÄÉî¶ÈÖµ
-					if (z < this->depthstencilview->texture2d->data[x][scanlineY].r) {//Èç¹û¸ÃÉî¶ÈÖµĞ¡ÓÚz»º³åÇøµÄÉî¶ÈÖµ£¬ ËµÃ÷Ó¦¸ÃÏÔÊ¾
-						this->depthstencilview->texture2d->data[x][scanlineY].r = z;//°Ñz´æÈëz»º³åÇø
-						this->rendertargetview->texture2d->data[x][scanlineY] = PixelShader(uv, Normal, Pos, TBN);//Õı³£»æÖÆÄ£Ê½
-						//this->rendertargetview->texture2d->data[x][scanlineY] = PixelShader(uv, Normal, Pos, TBN)+ this->rendertargetview->texture2d->data[x][scanlineY];//add»ìºÏ£¬ ¼ì²éÖØ»æÂ©»æÖÆ
+					int z = (int)(CalPlanePointZ(v1.Pos, v2.Pos, v3.Pos, VECTOR4(x, scanlineY, 1, 1))*10000000);//è®¡ç®—è¯¥åƒç´ çš„æ·±åº¦å€¼
+					if (z < this->depthstencilview->texture2d->data[x][scanlineY].r) {//å¦‚æœè¯¥æ·±åº¦å€¼å°äºzç¼“å†²åŒºçš„æ·±åº¦å€¼ï¼Œè¯´æ˜åº”è¯¥æ˜¾ç¤º
+						this->depthstencilview->texture2d->data[x][scanlineY].r = z;//æŠŠzå­˜å…¥zç¼“å†²åŒº
+						this->rendertargetview->texture2d->data[x][scanlineY] = PixelShader(uv, Normal, Pos, TBN);//æ­£å¸¸ç»˜åˆ¶æ¨¡å¼
+						//this->rendertargetview->texture2d->data[x][scanlineY] = PixelShader(uv, Normal, Pos, TBN)+ this->rendertargetview->texture2d->data[x][scanlineY];//addæ··åˆï¼Œæ£€æŸ¥é‡å¤ç»˜åˆ¶ï¼Œæ¼ç»˜
 					}
 				}
 			}
@@ -410,7 +410,7 @@ void DeviceContext::fillTopFlatTriangle(SimpleVertex v1, SimpleVertex v2, Simple
 	float curx1 = v3.Pos.x;
 	float curx2 = v3.Pos.x;
 
-	if (invslope1 < invslope2) {//invslope1,v1´ú±í×ó±ßµÄ±ß
+	if (invslope1 < invslope2) {//invslope1,v1ä»£è¡¨å·¦è¾¹çš„è¾¹
 		float temp;
 		temp = invslope1;
 		invslope1 = invslope2;
@@ -425,37 +425,37 @@ void DeviceContext::fillTopFlatTriangle(SimpleVertex v1, SimpleVertex v2, Simple
 	float dxdenominator = dx.x * v1.Pos.w + dx.y * v2.Pos.w + dx.z * v3.Pos.w;
 	float dydenominator = dy.x * v1.Pos.w + dy.y * v2.Pos.w + dy.z * v3.Pos.w;
 
-	//³õÊ¼uv
+	//åˆå§‹uv
 	VECTOR4 uv = v3.uv;
 	VECTOR4 uvnumerator = v3.uv * v3.Pos.w;
 	float uvdenominator = v3.Pos.w;
-	//¿¼ÂÇÍ¸ÊÓ½ÃÕıËãuvÔöÁ¿
-	VECTOR4 uvdxnnumerator = v1.uv * v1.Pos.w * dx.x + v2.uv * v2.Pos.w * dx.y + v3.uv * v3.Pos.w * dx.z;//uvÔÚxÔöÁ¿
-	VECTOR4 uvdynnumerator = v1.uv * v1.Pos.w * dy.x + v2.uv * v2.Pos.w * dy.y + v3.uv * v3.Pos.w * dy.z;//uvÔÚyÔöÁ¿
+	//è€ƒè™‘é€è§†çŸ«æ­£ç®—uvå¢é‡
+	VECTOR4 uvdxnnumerator = v1.uv * v1.Pos.w * dx.x + v2.uv * v2.Pos.w * dx.y + v3.uv * v3.Pos.w * dx.z;//uvåœ¨xå¢é‡
+	VECTOR4 uvdynnumerator = v1.uv * v1.Pos.w * dy.x + v2.uv * v2.Pos.w * dy.y + v3.uv * v3.Pos.w * dy.z;//uvåœ¨yå¢é‡
 
-	//³õÊ¼normal
+	//åˆå§‹normal
 	VECTOR4 Normal = v3.Normal;
 	VECTOR4 Normalnumerator = v3.Normal * v3.Pos.w;
 	float Normaldenominator = v3.Pos.w;
-	//¿¼ÂÇÍ¸ÊÓ½ÃÕıËãnormalÔöÁ¿
-	VECTOR4 Normaldxnnumerator = v1.Normal * v1.Pos.w * dx.x + v2.Normal * v2.Pos.w * dx.y + v3.Normal * v3.Pos.w * dx.z;//normalÔÚxÔöÁ¿
-	VECTOR4 Normaldynnumerator = v1.Normal * v1.Pos.w * dy.x + v2.Normal * v2.Pos.w * dy.y + v3.Normal * v3.Pos.w * dy.z;//normalÔÚyÔöÁ¿
+	//è€ƒè™‘é€è§†çŸ«æ­£ç®—normalå¢é‡
+	VECTOR4 Normaldxnnumerator = v1.Normal * v1.Pos.w * dx.x + v2.Normal * v2.Pos.w * dx.y + v3.Normal * v3.Pos.w * dx.z;//normalåœ¨xå¢é‡
+	VECTOR4 Normaldynnumerator = v1.Normal * v1.Pos.w * dy.x + v2.Normal * v2.Pos.w * dy.y + v3.Normal * v3.Pos.w * dy.z;//normalåœ¨yå¢é‡
 
-	//³õÊ¼ÊÀ½ç×ø±ê
+	//åˆå§‹ä¸–ç•Œåæ ‡
 	VECTOR4 Pos = v3.PosWorld;
 	VECTOR4 Posnumerator = v3.PosWorld * v3.Pos.w;
 	float Posdenominator = v3.Pos.w;
-	//¿¼ÂÇÍ¸ÊÓ½ÃÕıËãÊÀ½ç×ø±êÔöÁ¿
-	VECTOR4 Posdxnnumerator = v1.PosWorld * v1.Pos.w * dx.x + v2.PosWorld * v2.Pos.w * dx.y + v3.PosWorld * v3.Pos.w * dx.z;//ÊÀ½ç×ø±êÔÚxÔöÁ¿
-	VECTOR4 Posdynnumerator = v1.PosWorld * v1.Pos.w * dy.x + v2.PosWorld * v2.Pos.w * dy.y + v3.PosWorld * v3.Pos.w * dy.z;//ÊÀ½ç×ø±êÔÚyÔöÁ¿
+	//è€ƒè™‘é€è§†çŸ«æ­£ç®—ä¸–ç•Œåæ ‡å¢é‡
+	VECTOR4 Posdxnnumerator = v1.PosWorld * v1.Pos.w * dx.x + v2.PosWorld * v2.Pos.w * dx.y + v3.PosWorld * v3.Pos.w * dx.z;//åœ¨xå¢é‡
+	VECTOR4 Posdynnumerator = v1.PosWorld * v1.Pos.w * dy.x + v2.PosWorld * v2.Pos.w * dy.y + v3.PosWorld * v3.Pos.w * dy.z;//åœ¨yå¢é‡
 
-	//³õÊ¼TBN¾ØÕó
+	//åˆå§‹TBNçŸ©é˜µ
 	MATRIX TBN = v3.TBN;
 	MATRIX TBNnumerator = v3.TBN * v3.Pos.w;
 	float TBNdenominator = v3.Pos.w;
-	//¿¼ÂÇÍ¸ÊÓ½ÃÕıËãTBNÔöÁ¿
-	MATRIX TBNdxnnumerator = v1.TBN * v1.Pos.w * dx.x + v2.TBN * v2.Pos.w * dx.y + v3.TBN * v3.Pos.w * dx.z;//TBNÔÚxÔöÁ¿
-	MATRIX TBNdynnumerator = v1.TBN * v1.Pos.w * dy.x + v2.TBN * v2.Pos.w * dy.y + v3.TBN * v3.Pos.w * dy.z;//TBNÔÚyÔöÁ¿
+	//è€ƒè™‘é€è§†çŸ«æ­£ç®—TBNçŸ©é˜µå¢é‡
+	MATRIX TBNdxnnumerator = v1.TBN * v1.Pos.w * dx.x + v2.TBN * v2.Pos.w * dx.y + v3.TBN * v3.Pos.w * dx.z;//TBNåœ¨xå¢é‡
+	MATRIX TBNdynnumerator = v1.TBN * v1.Pos.w * dy.x + v2.TBN * v2.Pos.w * dy.y + v3.TBN * v3.Pos.w * dy.z;//TBNåœ¨yå¢é‡
 
 	float ymin = max(v1.Pos.y, v2.Pos.y);
 	for (int scanlineY = floor(v3.Pos.y); scanlineY >= floor(ymin); scanlineY--) {
@@ -496,12 +496,12 @@ void DeviceContext::fillTopFlatTriangle(SimpleVertex v1, SimpleVertex v2, Simple
 
 				if (uv.x >= 0 && uv.x <= 1 && uv.y >= 0 && uv.y <= 1) {
 
-					int z = (int)(CalPlanePointZ(v1.Pos, v2.Pos, v3.Pos, VECTOR4(x, scanlineY, 1, 1)) * 10000000);//¼ÆËã¸ÃÏñËØµÄÉî¶ÈÖµ
-					if (z < this->depthstencilview->texture2d->data[x][scanlineY].r) {//Èç¹û¸ÃÉî¶ÈÖµĞ¡ÓÚz»º³åÇøµÄÉî¶ÈÖµ£¬ ËµÃ÷Ó¦¸ÃÏÔÊ¾
+					int z = (int)(CalPlanePointZ(v1.Pos, v2.Pos, v3.Pos, VECTOR4(x, scanlineY, 1, 1)) * 10000000);//è®¡ç®—è¯¥åƒç´ çš„æ·±åº¦å€¼
+					if (z < this->depthstencilview->texture2d->data[x][scanlineY].r) {//å¦‚æœè¯¥æ·±åº¦å€¼å°äºzç¼“å†²åŒºçš„æ·±åº¦å€¼ï¼Œè¯´æ˜åº”è¯¥æ˜¾ç¤º
 						
-						this->depthstencilview->texture2d->data[x][scanlineY].r = z;//°Ñz´æÈëz»º³åÇø
-						this->rendertargetview->texture2d->data[x][scanlineY] = PixelShader(uv, Normal, Pos, TBN);//Õı³£»æÖÆÄ£Ê½
-						//this->rendertargetview->texture2d->data[x][scanlineY] = PixelShader(uv, Normal, Pos, TBN) + this->rendertargetview->texture2d->data[x][scanlineY];//add»ìºÏ£¬ ¼ì²éÖØ»æÂ©»æÖÆ
+						this->depthstencilview->texture2d->data[x][scanlineY].r = z;//æŠŠzå­˜å…¥zç¼“å†²åŒº
+						this->rendertargetview->texture2d->data[x][scanlineY] = PixelShader(uv, Normal, Pos, TBN);//æ­£å¸¸ç»˜åˆ¶æ¨¡å¼
+						//this->rendertargetview->texture2d->data[x][scanlineY] = PixelShader(uv, Normal, Pos, TBN) + this->rendertargetview->texture2d->data[x][scanlineY];//addæ··åˆï¼Œæ£€æŸ¥é‡ç»˜æ¼ç»˜
 					}
 				}
 			}
@@ -512,7 +512,7 @@ void DeviceContext::fillTopFlatTriangle(SimpleVertex v1, SimpleVertex v2, Simple
 }
 void DeviceContext::drawTriangle(SimpleVertex v1, SimpleVertex v2, SimpleVertex v3)
 {
-	SimpleVertex temp;//±£Ö¤v1ÔÚ×îÉÏÃæ£¬v2ÖĞ¼ä
+	SimpleVertex temp;//ä¿è¯v1åœ¨æœ€ä¸Šé¢ï¼Œv2åœ¨ä¸­é—´
 	if (v1.Pos.y > v2.Pos.y) {
 		temp = v1;
 		v1 = v2;
@@ -528,10 +528,10 @@ void DeviceContext::drawTriangle(SimpleVertex v1, SimpleVertex v2, SimpleVertex 
 		v2 = v3;
 		v3 = temp;
 	}
-	if (v2.Pos.y == v3.Pos.y) {//ÅĞ¶ÏÊÇ²»ÊÇÉÏÈı½ÇĞÎ
+	if (v2.Pos.y == v3.Pos.y) {//åˆ¤æ–­æ˜¯ä¸æ˜¯ä¸Šä¸‰è§’å½¢
 		fillBottomFlatTriangle(v1, v2, v3);
 	}
-	else if (v1.Pos.y == v2.Pos.y) {//ÅĞ¶ÏÊÇ²»ÊÇÏÂÈı½ÇĞÎ
+	else if (v1.Pos.y == v2.Pos.y) {//åˆ¤æ–­æ˜¯ä¸æ˜¯ä¸‹ä¸‰è§’å½¢
 		fillTopFlatTriangle(v1, v2, v3);
 	}
 	else
@@ -603,19 +603,19 @@ COLOR DeviceContext::PixelShader(VECTOR4 texcoord, VECTOR4 normal, VECTOR4 pos, 
 
 	int textwidth = this->texturesource.width;
 	int textheight = this->texturesource.height;
-	VECTOR4 nMap = Color2Vec4(&this->texturesource.data[int(textwidth * texcoord.x)][int(textheight * texcoord.y)]) / 255 * 2 - VECTOR4(1, 1, 1, 1);//¶ÁÈ¡·¨ÏßÌùÍ¼µÃµ½·¨Ïß
+	VECTOR4 nMap = Color2Vec4(&this->texturesource.data[int(textwidth * texcoord.x)][int(textheight * texcoord.y)]) / 255 * 2 - VECTOR4(1, 1, 1, 1);//è¯»å–æ³•çº¿è´´å›¾å¾—åˆ°æ³•çº¿
 	//temp = Vec4Transform(&nMap, &TBN);
 	//VECTOR4 N = Vec4Normalize(&temp);
 
 	temp = (cb->lightPos) - pos;
 	VECTOR4 L = Vec4Normalize(&temp);
-	VECTOR4 N = Vec4Normalize(&normal);//²»¶Á·¨ÏßÌùÍ¼µÄ·¨Ïß
+	VECTOR4 N = Vec4Normalize(&normal);//ä¸è¯»æ³•çº¿è´´å›¾çš„æ³•çº¿
 	temp = *(cb->eye) - pos;
 	VECTOR4 V = Vec4Normalize(&temp);
 	VECTOR4 R = (VECTOR4(0, 0, 0, 0) - L) - N * 2 * Vec4Dot(&L, &N);
 
 	cb->id = COLOR(0, 200, 0, 0);
-	//cb->id = this->texturesource.data[int(textwidth * texcoord.x)][int(textheight * texcoord.y)];//¶ÁÈ¡ÌùÍ¼×÷ÎªÂş·´Éä
+	//cb->id = this->texturesource.data[int(textwidth * texcoord.x)][int(textheight * texcoord.y)];//è¯»å–è´´å›¾ä½œä¸ºæ¼«åå°„
 	COLOR ip;
 	if (Vec4Dot(&L, &N) < 0) {
 		//ip = (cb->ia) * (cb->ka) + COLOR(0, 0, 0, 0) + (cb->is) * pow(Vec4Dot(&R, &V), cb->a) * (cb->ks);
@@ -666,9 +666,9 @@ int Texture2D::readTGA(std::string filename)
 	FILE* filetga;
 	fopen_s(&filetga, filename.c_str(), "rb");
 
-	//¶ÁÈ¡ÎÄ¼şÍ·
+	//è¯»å–æ–‡ä»¶å¤´
 	TGAHeader data_header;
-	//Ö±½Ó¶ÁÈ¡»áÓĞ½á¹¹ÌåµÄ¶ÔÆëÎÊÌâ
+	//ç›´æ¥è¯»å–ä¼šæœ‰ç»“æ„ä½“çš„å¯¹é½é—®é¢˜
 	fread(&data_header.idLength, sizeof(uint8_t), 1, filetga);
 	fread(&data_header.colormapType, sizeof(uint8_t), 1, filetga);
 	fread(&data_header.imageType, sizeof(uint8_t), 1, filetga);
@@ -684,12 +684,12 @@ int Texture2D::readTGA(std::string filename)
 
 	this->width = data_header.width;
 	this->height = data_header.height;
-	if (data_header.bitsPerPixel != 32) {//Ö»¿¼ÂÇ32Î»µÄÊı¾İ
+	if (data_header.bitsPerPixel != 32) {//åªè€ƒè™‘32ä½çš„æ•°æ®
 		return 0;
 	}
-	//ÏñËØÊı¾İ´Ó³ß´ç
+	//åƒç´ æ•°æ®ä»å°ºå¯¸
 	int datasize = data_header.width * data_header.height * 4;
-	//¶ÁÈ¡ÑÕÉ«Êı¾İ
+	//è¯»å–é¢œè‰²æ•°æ®
 	uint8_t* data_color = new uint8_t[datasize];
 	fread(data_color, sizeof(uint8_t), datasize, filetga);
 
@@ -714,11 +714,11 @@ HRESULT Renderer::CreateDeviceAndSwapChain(SWAP_CHAIN_DESC* pSwapChainDesc, Swap
 	this->swapchain->desc = *pSwapChainDesc;
 	return S_OK;
 }
-void DDA_Line(int x1, int x2, int y1, int y2, COLOR color1, COLOR color2, DeviceContext* devicecontext)//DDA»­ÏßËã·¨
+void DDA_Line(int x1, int x2, int y1, int y2, COLOR color1, COLOR color2, DeviceContext* devicecontext)//DDAç”»çº¿ç®—æ³•
 {
-	float increaseX = 0, increaseY = 0;//x£¬y·½ÏòµÄÔöÁ¿
-	COLOR increaseColor;//colorµÄÔöÁ¿
-	float steps;//Ñ­»·´ÎÊı
+	float increaseX = 0, increaseY = 0;//xã€yæ–¹å‘çš„å¢é‡
+	COLOR increaseColor;//colorçš„å¢é‡
+	float steps;//å¾ªç¯æ¬¡æ•°
 	float x = 0, y = 0;
 	COLOR color;
 	steps = max(abs(x2 - x1), abs(y2 - y1));
@@ -739,7 +739,7 @@ void DDA_Line(int x1, int x2, int y1, int y2, COLOR color1, COLOR color2, Device
 		color = color + increaseColor;
 	}
 }
-bool isPointInTrangle(VECTOR4 point, VECTOR4 a, VECTOR4 b, VECTOR4 c)//²æ³ËÅĞ¶ÏµãÊÇ·ñÔÚÈı½ÇĞÎÄÚ²¿
+bool isPointInTrangle(VECTOR4 point, VECTOR4 a, VECTOR4 b, VECTOR4 c)//å‰ä¹˜åˆ¤æ–­ç‚¹æ˜¯å¦åœ¨ä¸‰è§’å½¢å†…éƒ¨
 {
 	VECTOR3 temp;
 
@@ -776,7 +776,7 @@ SimpleVertex wviewport(SimpleVertex input)
 	ver.Pos.y = int((ver.Pos.y + 1) * 768 / 2 + 0.5);
 	return ver;
 }
-bool ClipSpaceCull(VECTOR4 v1, VECTOR4 v2, VECTOR4 v3, float Near, float Far)//ÊÇ·ñÈı½ÇĞÎÖÁÉÙÓĞÒ»²¿·ÖÔÚÆÁÄ»ÄÚ
+bool ClipSpaceCull(VECTOR4 v1, VECTOR4 v2, VECTOR4 v3, float Near, float Far)//æ˜¯å¦ä¸‰è§’å½¢è‡³å°‘æœ‰ä¸€éƒ¨åˆ†åœ¨å±å¹•å†…
 {
 	if (v1.w < Near && v2.w < Near && v2.w < Near) {
 		return false;
@@ -804,7 +804,7 @@ bool ClipSpaceCull(VECTOR4 v1, VECTOR4 v2, VECTOR4 v3, float Near, float Far)//Ê
 	}
 	return true;
 }
-bool FaceCull(VECTOR4 v1, VECTOR4 v2, VECTOR4 v3)//ÊÇ·ñ±³ÃæÌŞ³ı
+bool FaceCull(VECTOR4 v1, VECTOR4 v2, VECTOR4 v3)//æ˜¯å¦èƒŒé¢å‰”é™¤
 {
 	VECTOR3 temp;
 	VECTOR3 tmp1 = VECTOR3(v2.x - v1.x, v2.y - v1.y, v2.z - v1.z);
@@ -814,11 +814,11 @@ bool FaceCull(VECTOR4 v1, VECTOR4 v2, VECTOR4 v3)//ÊÇ·ñ±³ÃæÌŞ³ı
 	VECTOR3 view = VECTOR3(0, 0, 1);
 	return Vec3Dot(&normal, &view) < 0;
 }
-bool Inside(VECTOR4 line, VECTOR4 p)//ÅĞ¶ÏµãÊÇ·ñÔÚÆ½ÃæÄÚ£¬Í¨¹ı¿´µãºÍÆ½ÃæµÄ¾àÀëd£¬d>0ÔòÔÚÆ½Ãæ·¨ÏòÁ¿ËùÖ¸µÄÇøÓòÄÚ
+bool Inside(VECTOR4 line, VECTOR4 p)//åˆ¤æ–­ç‚¹æ˜¯å¦åœ¨å¹³é¢å†…ï¼Œé€šè¿‡çœ‹ç‚¹å’Œå¹³é¢çš„è·ç¦»dï¼Œd>0åˆ™åœ¨å¹³é¢æ³•å‘é‡æ‰€æŒ‡çš„åŒºåŸŸå†…
 {
 	return (line.x * p.x + line.y * p.y + line.z * p.z + line.w * p.w >= 0);
 }
-SimpleVertex Intersect(SimpleVertex v1, SimpleVertex v2, VECTOR4 line)//ÇóµãÓëÏß¶ÎµÄ½»µã£¬Í¨¹ı¶Ëµã²åÖµ
+SimpleVertex Intersect(SimpleVertex v1, SimpleVertex v2, VECTOR4 line)//æ±‚ç‚¹ä¸çº¿æ®µçš„äº¤ç‚¹ï¼Œé€šè¿‡ç«¯ç‚¹æ’å€¼
 {
 	float da = v1.Pos.x * line.x + v1.Pos.y * line.y + v1.Pos.z * line.z + line.w * v1.Pos.w;
 	float db = v2.Pos.x * line.x + v2.Pos.y * line.y + v2.Pos.z * line.z + line.w * v2.Pos.w;
@@ -840,40 +840,40 @@ bool AllVertexInside(Triangle input, float Near, float Far)
 	}
 	return true;
 }
-std::vector<Triangle> SutherlandHodgeman(std::vector<Triangle> input, float Near, float Far)//ÊäÈëµ±Ç°Ö¡µÄËùÓĞÈı½ÇĞÎÁĞ±í£¬ Êä³ö²Ã¼ôºóµÄÈı½ÇĞÎÁĞ±í
+std::vector<Triangle> SutherlandHodgeman(std::vector<Triangle> input, float Near, float Far)//è¾“å…¥å½“å‰å¸§çš„æ‰€æœ‰ä¸‰è§’å½¢åˆ—è¡¨ï¼Œè¾“å‡ºè£å‰ªåçš„ä¸‰è§’å½¢åˆ—è¡¨
 {
-	const VECTOR4 viewlines[6] = { VECTOR4(0, 0, 1, 1), VECTOR4(0, 0, -1, 1), VECTOR4(1, 0, 0, 1), VECTOR4(0, 1, 0, 1), VECTOR4(-1, 0, 0, 1), VECTOR4(0, -1, 0, 1) };//6¸ö²Ã¼ôÆ½ÃæµÄ·¨ÏòÁ¿
+	const VECTOR4 viewlines[6] = { VECTOR4(0, 0, 1, 1), VECTOR4(0, 0, -1, 1), VECTOR4(1, 0, 0, 1), VECTOR4(0, 1, 0, 1), VECTOR4(-1, 0, 0, 1), VECTOR4(0, -1, 0, 1) };//6ä¸ªè£å‰ªå¹³é¢çš„æ³•å‘é‡
 	std::vector<Triangle> vec1 = input;
 	std::vector<Triangle> vec2;
-	std::vector<SimpleVertex> vertex;//´æÃ¿´Î²Ã¼ôÈı½ÇĞÎºóµÄ¶¥µã
+	std::vector<SimpleVertex> vertex;//å­˜æ¯æ¬¡è£å‰ªä¸‰è§’å½¢åçš„é¡¶ç‚¹
 	int inputsize = vec1.size();
-	for (int m = 0; m < 6; m++) {//±éÀúÁù´Î²Ã¼ôÃæ
+	for (int m = 0; m < 6; m++) {//éå†å…­æ¬¡è£å‰ªé¢
 		vec2.clear();
 		inputsize = vec1.size();
-		for (int n = 0; n < inputsize; n++) {//±éÀúËùÓĞÈı½ÇĞÎ
-			if (AllVertexInside(vec1[n], Near, Far)) {//Èç¹ûµãÈ«ÔÚ·¶Î§ÄÚ£¬Ôò²»ÓÃÈÎºÎ²Ã¼ô£¬Ö±½ÓÊä³ö
+		for (int n = 0; n < inputsize; n++) {//éå†æ‰€æœ‰ä¸‰è§’å½¢
+			if (AllVertexInside(vec1[n], Near, Far)) {//å¦‚æœç‚¹å…¨åœ¨èŒƒå›´å†…ï¼Œåˆ™ä¸ç”¨ä»»ä½•è£å‰ªï¼Œç›´æ¥è¾“å‡º
 				vec2.push_back(vec1[n]);
 			}
 			else 
 			{
-				for (int j = 0; j < 3; j++) {//±éÀúÈı½ÇĞÎµÄÈı¸ö¶¥µã
-					SimpleVertex current = vec1[n].vertex[j];//µ±Ç°µÄµã
-					SimpleVertex last = vec1[n].vertex[(j + 3 - 1) % 3];//ÉÏÒ»¸öµã
+				for (int j = 0; j < 3; j++) {//éå†ä¸‰è§’å½¢çš„ä¸‰ä¸ªé¡¶ç‚¹
+					SimpleVertex current = vec1[n].vertex[j];//å½“å‰çš„ç‚¹
+					SimpleVertex last = vec1[n].vertex[(j + 3 - 1) % 3];//ä¸Šä¸€ä¸ªç‚¹
 
-					if (Inside(viewlines[m], current.Pos)) {//Èç¹ûµ±Ç°µÄµãÔÚ²Ã¼ôÆ½ÃæÄÚ
-						if (!Inside(viewlines[m], last.Pos)) {//Èç¹ûÉÏÒ»¸öµã²»ÔÚÆ½ÃæÄÚ
+					if (Inside(viewlines[m], current.Pos)) {//å¦‚æœå½“å‰çš„ç‚¹åœ¨è£å‰ªå¹³é¢å†…
+						if (!Inside(viewlines[m], last.Pos)) {//å¦‚æœä¸Šä¸€ä¸ªç‚¹ä¸åœ¨å¹³é¢å†…
 							SimpleVertex intersecting = Intersect(last, current, viewlines[m]);
 							vertex.push_back(intersecting);
 						}
 						vertex.push_back(current);
 					}
-					else if (Inside(viewlines[m], last.Pos)) {//ËäÈ»µ±Ç°µÄµã²»ÔÚÆ½ÃæÄÚ£¬µ«ÊÇÉÏÒ»¸öµãÔÚÆ½ÃæÄÚ
+					else if (Inside(viewlines[m], last.Pos)) {//è™½ç„¶å½“å‰çš„ç‚¹ä¸åœ¨å¹³é¢å†…ï¼Œä½†æ˜¯ä¸Šä¸€ä¸ªç‚¹åœ¨å¹³é¢å†…
 						SimpleVertex intersecting = Intersect(last, current, viewlines[m]);
 						vertex.push_back(intersecting);
 					}
 				}
 
-				int size = vertex.size() - 2;//¸ù¾İ¶¥µã×°ÅäÈı½ÇĞÎ£¬Éú³ÉĞÂµÄÈı½ÇĞÎ£¬´«Èëvec2
+				int size = vertex.size() - 2;//æ ¹æ®é¡¶ç‚¹è£…é…ä¸‰è§’å½¢ï¼Œç”Ÿæˆæ–°çš„ä¸‰è§’å½¢ï¼Œä¼ å…¥vec2
 				for (int k = 0; k < size; k++) {
 					Triangle triangle;
 					triangle.vertex[0] = vertex[0];
@@ -890,13 +890,13 @@ std::vector<Triangle> SutherlandHodgeman(std::vector<Triangle> input, float Near
 }
 void StringSplit(std::string s, char splitchar, std::vector<std::string>& vec)
 {
-	if (vec.size() > 0) {//Çå¿Õvec
+	if (vec.size() > 0) {//æ¸…ç©ºvec
 		vec.clear();
 	}
 	int length = s.length();
 	int start = 0;
 	for (int i = 0; i < length; i++) {
-		if (s[i] == splitchar && i == 0) {//µÚÒ»¸ö¾ÍÓöµ½·Ö¸î·û
+		if (s[i] == splitchar && i == 0) {//ç¬¬ä¸€ä¸ªå°±é‡åˆ°åˆ†éš”ç¬¦
 			start += 1;
 		}
 		else if (s[i] == splitchar) {
@@ -912,11 +912,11 @@ void ReadObjFile(std::string path, Mesh* obj)
 {
 	std::ifstream in(path);
 	std::string txt = "";
-	if (in) {//»ñÈ¡ÎÄ¼ş³É¹¦
-		std::cout << "»ñÈ¡ÎÄ¼ş³É¹¦"<<std::endl;
-		while (getline(in, txt))//lineÖĞ²»°üÀ¨Ã¿ĞĞµÄ»»·ûĞĞ
+	if (in) {//è·å–æ–‡ä»¶æˆåŠŸ
+		std::cout << "è·å–æ–‡ä»¶æˆåŠŸ"<<std::endl;
+		while (getline(in, txt))//lineä¸­ä¸åŒ…æ‹¬æ¯è¡Œçš„æ¢è¡Œç¬¦
 		{
-			//¶¥µã×ø±ê
+			//é¡¶ç‚¹åæ ‡
 			if (txt[0] == 'v' && txt[1] == ' ') {
 				std::vector<std::string> num;
 				txt.erase(0, 2);
@@ -925,7 +925,7 @@ void ReadObjFile(std::string path, Mesh* obj)
 				pos = VECTOR4((float)atof(num[0].c_str()), (float)atof(num[1].c_str()), (float)atof(num[2].c_str()), 1);
 				obj->positionBuffer.push_back(pos);
 			}
-			//¶¥µã·¨Ïß
+			//é¡¶ç‚¹æ³•çº¿
 			else if (txt[0] == 'v' && txt[1] == 'n') {
 				std::vector<std::string> num;
 				txt.erase(0, 3);
@@ -943,13 +943,13 @@ void ReadObjFile(std::string path, Mesh* obj)
 				uv = VECTOR4((float)atof(num[0].c_str()), (float)atof(num[1].c_str()), 0, 0);
 				obj->uvBuffer.push_back(uv);
 			}
-			//Ë÷Òı±àºÅ
-			//ÔÚÃæµÄÊı¾İÖĞ¶àÁËÌùÍ¼×ø±êuvºÍ·¨ÏßµÄË÷ÒıºÅ£¬Ë÷ÒıºÅ·Ö±ğÓÃ×óĞ±Ïß£¨/£©¸ô¿ª
+			//ç´¢å¼•ç¼–å·
+			//åœ¨é¢çš„æ•°æ®ä¸­å¤šäº†è´´å›¾å·¦è¾¹uvå’Œæ³•çº¿çš„ç´¢å¼•å·ï¼Œç´¢å¼•å·åˆ†åˆ«ç”¨å·¦æ–œçº¿(/)éš”å¼€
 			else if (txt[0] == 'f' && txt[1] == ' ') {
 				std::vector<std::string> num;
 				txt.erase(0, 2);
 				StringSplit(txt, ' ', num);
-				std::vector<VECTOR4> indexesVector;//´æµÄÊÇÄ£ĞÍÎÄ¼şÒ»ĞĞµÄËùÓĞË÷Òı
+				std::vector<VECTOR4> indexesVector;//å­˜çš„æ˜¯æ¨¡å‹æ–‡ä»¶ä¸€è¡Œçš„æ‰€æœ‰ç´¢å¼•
 				for (int i = 0; i < num.size(); i++) {
 					std::vector<std::string> threeIndex;
 					StringSplit(num[i], '/', threeIndex);
@@ -960,7 +960,7 @@ void ReadObjFile(std::string path, Mesh* obj)
 			}
 		}
 	}
-	else {//Ã»ÓĞ¸ÃÎÄ¼ş
+	else {//æ²¡æœ‰è¯¥æ–‡ä»¶
 		std::cout << "no file" << std::endl;
 	}
 }

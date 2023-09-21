@@ -1,15 +1,15 @@
-#include"Graphics.h"
+ï»¿#include"Graphics.h"
 #include<iostream>
 #include<windows.h>
 
 Renderer renderer;
-BYTE buffer[SCREEN_WIDTH * SCREEN_HEIGHT * 3];//Ò»¸öÏñËØÕ¼Èý×Ö½Ú
+BYTE buffer[SCREEN_WIDTH * SCREEN_HEIGHT * 3];//ä¸€ä¸ªåƒç´ å ä¸‰å­—èŠ‚
 HDC screen_hdc;
 HWND screen_hwnd;
-HDC hCompatibleDC;//¼æÈÝHDC
-HBITMAP hCompatibleBitmap;//¼æÈÝBITMAP
-HBITMAP hOldBitmap;//¾ÉµÄBITMAP
-BITMAPINFO binfo;//BITMAPINFO½á¹¹Ìå
+HDC hCompatibleDC;//å…¼å®¹HDC
+HBITMAP hCompatibleBitmap;//å…¼å®¹BITMAP
+HBITMAP hOldBitmap;//æ—§çš„BITMAP
+BITMAPINFO binfo;//BITMAPINFOç»“æž„ä½“
 
 HDC hdc;
 HINSTANCE g_hInst = NULL;
@@ -46,7 +46,7 @@ SimpleVertex vertices[] =
 };
 ConstantBuffer cb;
 
-//º¯ÊýÉùÃ÷
+//å‡½æ•°å£°æ˜Ž
 HRESULT InitWindow(HINSTANCE hInstance, int nCmdShow);
 HRESULT InitDevice();
 void CleanupDevice();
@@ -76,19 +76,19 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		return 0;
 	}
 	devicefinished = true;
-	//Ìî³äBITMAPINFO½á¹¹Ìå
+	//å¡«å……BITMAPINFOç»“æž„ä½“
 	ZeroMemory(&binfo, sizeof(BITMAPINFO));
-	binfo.bmiHeader.biBitCount = 24;//Ã¿¸öÏñËØ¶àÉÙÎ»
+	binfo.bmiHeader.biBitCount = 24;//æ¯ä¸ªåƒç´ å¤šå°‘ä½
 	binfo.bmiHeader.biCompression = BI_RGB;
 	binfo.bmiHeader.biHeight = -SCREEN_HEIGHT;
 	binfo.bmiHeader.biPlanes = 1;
 	binfo.bmiHeader.biSizeImage = 0;
 	binfo.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
 	binfo.bmiHeader.biWidth = SCREEN_WIDTH;
-	//»ñÈ¡ÆÁÄ»HDC
+	//èŽ·å–å±å¹•HDC
 	screen_hwnd = g_hwnd;
 	screen_hdc = GetDC(screen_hwnd);
-	//»ñÈ¡¼æÈÝµÄHDCºÍ¼æÈÝBitmap£¬ ¼æÈÝBitmapÑ¡Èë¼æÈÝHDC(Ã¿¸öHDCÄÚ´æÃ¿Ê±Ã¿¿Ì½öÄÜÑ¡ÈëÒ»¸öGDI×ÊÔ´£¬ GDI×ÊÔ´ÒªÑ¡ÈëHDC²ÅÄÜ½øÐÐ¼ì²â)
+	//èŽ·å–å…¼å®¹çš„HDCå’Œå…¼å®¹çš„Bitmapï¼Œå…¼å®¹Bitmapé€‰å…¥å…¼å®¹HDC(æ¯ä¸ªHDCå†…å­˜æ¯æ—¶æ¯åˆ»ä»…èƒ½é€‰å…¥ä¸€ä¸ªGDIèµ„æºï¼ŒGDIèµ„æºè¦é€‰å…¥HDCæ‰èƒ½è¿›è¡Œæ£€æµ‹)
 	hCompatibleDC = CreateCompatibleDC(screen_hdc);
 	hCompatibleBitmap = CreateCompatibleBitmap(screen_hdc, SCREEN_WIDTH, SCREEN_HEIGHT);
 	hOldBitmap = (HBITMAP)SelectObject(hCompatibleDC, hCompatibleBitmap);
@@ -111,10 +111,10 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	CleanupDevice();
 	return (int)msg.wParam;
 }
-//´´½¨´°¿Ú
+//åˆ›å»ºçª—å£
 HRESULT InitWindow(HINSTANCE hInstance, int nCmdShow)
 {
-	//×¢²á´°¿Ú
+	//æ³¨å†Œçª—å£
 	WNDCLASSEX wcex;
 	wcex.cbSize = sizeof(WNDCLASSEX);
 	wcex.style = CS_HREDRAW | CS_VREDRAW;
@@ -130,7 +130,7 @@ HRESULT InitWindow(HINSTANCE hInstance, int nCmdShow)
 	wcex.hIconSm = LoadIcon(wcex.hInstance, (LPCTSTR)107);
 	if (!RegisterClassEx(&wcex))
 		return E_FAIL;
-	//´´½¨´°¿Ú
+	//åˆ›å»ºçª—å£
 	g_hInst = hInstance;
 	RECT rc = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
 	AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
@@ -147,7 +147,7 @@ HRESULT InitDevice()
 	GetClientRect(g_hwnd, &rc);
 	UINT width = 1024;
 	UINT height = 768;
-	//´´½¨½»»»Á´
+	//åˆ›å»ºäº¤æ¢é“¾
 	SWAP_CHAIN_DESC sd;
 	SecureZeroMemory(&sd, sizeof(sd));
 	sd.BufferCount = 1;
@@ -158,7 +158,7 @@ HRESULT InitDevice()
 	hr = renderer.CreateDeviceAndSwapChain(&sd, &g_pSwapChain, &g_pd3dDevice, &g_pImmediateContext);
 	if (FAILED(hr))
 		return hr;
-	//´´½¨äÖÈ¾¶ÔÏó
+	//åˆ›å»ºæ¸²æŸ“å¯¹è±¡
 	Texture2D* pBackBuffer = NULL;
 	hr = g_pSwapChain->GetBuffer(0, &pBackBuffer);
 	if (FAILED(hr))
@@ -167,12 +167,12 @@ HRESULT InitDevice()
 	pBackBuffer->Release();
 	if (FAILED(hr))
 		return hr;
-	//´´½¨Éî¶È»º³åÎÆÀí
+	//åˆ›å»ºæ·±åº¦ç¼“å†²çº¹ç†
 	Texture2D* pDepthBuffer = NULL;
 	hr = g_pd3dDevice->CreateDepthstencView(pDepthBuffer, &g_pDepthStencilView);
 	pDepthBuffer->Release();
 	g_pImmediateContext->SetRenderTarget(1, g_pRenderTargetView, g_pDepthStencilView);
-	//´´½¨¶¥µã»º³åÇø
+	//åˆ›å»ºé¡¶ç‚¹ç¼“å†²åŒº
 	BUFFER_DESC bd;
 	SecureZeroMemory(&bd, sizeof(bd));
 	bd.ByteWidth = sizeof(SimpleVertex) * 8;
@@ -182,34 +182,34 @@ HRESULT InitDevice()
 	hr = g_pd3dDevice->CreateBuffer(&bd, &InitData, &g_pVertexsBuffer);
 	if (FAILED(hr))
 		return hr;
-	//ÉèÖÃ¶¥µã»º³åÇø
+	//è®¾ç½®é¡¶ç‚¹ç¼“å†²åŒº
 	UINT stride = sizeof(SimpleVertex);
 	UINT offset = 0;
 	g_pImmediateContext->SetVertexBuffer(1, &g_pVertexsBuffer, &stride, &offset);
-	//´´½¨Ë÷Òý»º³åÇø
+	//åˆ›å»ºç´¢å¼•ç¼“å†²åŒº
 	bd.ByteWidth = sizeof(WORD) * 8;
 	InitData.pSyMem = indices;
 	hr = g_pd3dDevice->CreateBuffer(&bd, &InitData, &g_pIndexBuffer);
 	if (FAILED(hr))
 		return hr;
-	//ÉèÖÃË÷Òý»º³åÇø
+	//è®¾ç½®ç´¢å¼•ç¼“å†²åŒº
 	g_pImmediateContext->SetIndexBuffer(g_pIndexBuffer, 0);
-	//ÉèÖÃÍ¼Ôª
+	//è®¾ç½®å›¾å…ƒ
 	g_pImmediateContext->SetPrimitiveTopology(4);
-	//´´½¨³£Á¿»º³åÇø
+	//åˆ›å»ºå¸¸é‡ç¼“å†²åŒº
 	bd.ByteWidth = sizeof(ConstantBuffer);
 	InitData.pSyMem = &cb;
-	hr = g_pd3dDevice->CreateBuffer(&bd, &InitData, &g_pConstantBuffer);//ÐÂ½¨³£Á¿»º³åÇø£¬²»Ê¹ÓÃ³õÊ¼Êý¾Ý
+	hr = g_pd3dDevice->CreateBuffer(&bd, &InitData, &g_pConstantBuffer);//ÃÃ‚Â½Â¨Â³Â£ÃÂ¿Â»ÂºÂ³Ã¥Ã‡Ã¸Â£Â¬Â²Â»ÃŠÂ¹Ã“ÃƒÂ³ÃµÃŠÂ¼ÃŠÃ½Â¾Ã
 	g_pImmediateContext->SetConstantBuffer(1, 1, &g_pConstantBuffer);
 	if (FAILED(hr))
 		return hr;
 	initdevicefinished = true;
-	//¼ÓÔØÌùÍ¼
+	//åŠ è½½è´´å›¾
 	g_pImmediateContext->Clearnormaltexture();
 	//g_pImmediateContext->normaltexturesource.readTGA("");
 	g_pImmediateContext->texturesource.readTGA("1.1.tga");
 	g_pImmediateContext->texturesource.LoadTexture(L"redlol.dds", 100,100);
-	//¼ÓÔØÄ£ÐÍÎÄ¼þ
+	//åŠ è½½æ¨¡åž‹æ–‡ä»¶
 	hr = g_pd3dDevice->CreateMesh(&g_mesh);
 	if (FAILED(hr))
 		return hr;

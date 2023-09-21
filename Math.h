@@ -8,7 +8,6 @@ public:
 	VECTOR3() {};
 	VECTOR3(float x, float y, float z);
 
-	//重载运算符
 	VECTOR3 operator + (VECTOR3 vec);
 	VECTOR3 operator - (VECTOR3 vec);
 	VECTOR3 operator * (float f);
@@ -26,7 +25,6 @@ public:
 	VECTOR4() {};
 	VECTOR4(float x, float y, float z, float w);
 
-	//重载运算符
 	VECTOR4 operator + (VECTOR4 vec);
 	VECTOR4 operator - (VECTOR4 vec);
 	VECTOR4 operator * (float f);
@@ -49,7 +47,6 @@ public:
 		   float _41, float _42, float _43, float _44);
 	MATRIX(VECTOR4 v1, VECTOR4 v2, VECTOR4 v3);
 
-	//重载运算符
 	MATRIX operator * (MATRIX);
 	MATRIX operator + (MATRIX);
 	MATRIX operator - (MATRIX);
