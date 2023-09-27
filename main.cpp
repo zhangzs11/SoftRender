@@ -78,16 +78,17 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	devicefinished = true;
 	//填充BITMAPINFO结构体
 	ZeroMemory(&binfo, sizeof(BITMAPINFO));
-	binfo.bmiHeader.biBitCount = 24;//每个像素多少位
+	binfo.bmiHeader.biBitCount = 24;//每个像素多少位,RGB各8位（但是不用alph吗?）
 	binfo.bmiHeader.biCompression = BI_RGB;
 	binfo.bmiHeader.biHeight = -SCREEN_HEIGHT;
 	binfo.bmiHeader.biPlanes = 1;
 	binfo.bmiHeader.biSizeImage = 0;
 	binfo.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
 	binfo.bmiHeader.biWidth = SCREEN_WIDTH;
+
 	//获取屏幕HDC
-	screen_hwnd = g_hwnd;
-	screen_hdc = GetDC(screen_hwnd);
+	screen_hwnd = g_hwnd;//获取全局的窗口句柄
+	screen_hdc = GetDC(screen_hwnd);//获取该窗口的设备上下文(Device Context)
 	//获取兼容的HDC和兼容的Bitmap，兼容Bitmap选入兼容HDC(每个HDC内存每时每刻仅能选入一个GDI资源，GDI资源要选入HDC才能进行检测)
 	hCompatibleDC = CreateCompatibleDC(screen_hdc);
 	hCompatibleBitmap = CreateCompatibleBitmap(screen_hdc, SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -105,7 +106,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		}
 		else {
 			Render(0);
-			//DrawFPS(screen_hdc);
+			DrawFPS(screen_hdc);
 		}
 	}
 	CleanupDevice();
@@ -369,11 +370,17 @@ void DrawFPS(HDC hdc)
 	static int t = 0;
 	int fps = 0;
 	int tmp = GetTickCount() - t;
-	char str[50] = { 0 };
+	wchar_t str[50] = { 0 };
+
 	if (tmp)
 		fps = 1000 / tmp;
+
 	t = GetTickCount();
-	RECT rc = { 0,0,30,20 };
-	if (fps)
-		std::cout << " fps: " << fps << std::endl;
+	swprintf(str, sizeof(str) / sizeof(wchar_t), L"FPS: %d", fps);
+
+	SetTextColor(hdc, RGB(255, 255, 255));
+	SetBkMode(hdc, TRANSPARENT);
+	TextOut(hdc, 5, 5, str, wcslen(str)); // 使用 wcslen 获取宽字符数组的长度
+	//if (fps)
+	//	std::cout << " fps: " << fps << std::endl;
 }

@@ -913,7 +913,7 @@ void ReadObjFile(std::string path, Mesh* obj)
 	std::ifstream in(path);
 	std::string txt = "";
 	if (in) {//获取文件成功
-		std::cout << "获取文件成功"<<std::endl;
+		std::cout << "successful get the Obj file!"<<std::endl;
 		while (getline(in, txt))//line中不包括每行的换行符
 		{
 			//顶点坐标
