@@ -542,28 +542,60 @@ void DeviceContext::drawTriangle(SimpleVertex v1, SimpleVertex v2, SimpleVertex 
 }
 void DeviceContext::ClearRenderTargetView()
 {
-	for (int x = 0; x < 1024; x++) {
-		for (int y = 0; y < 768; y++) {
-			this->rendertargetview->texture2d->data[x][y] = COLOR(0, 0, 0, 0);
-		}
+	static COLOR precreatedArray[1024 * 768];
+	static bool initialized = false;
+
+	if (!initialized) {
+		std::fill_n(precreatedArray, 1024 * 768, COLOR(0, 0, 0, 0));
+		initialized = true; // make sure to initialize the array only once
 	}
+
+	std::copy_n(precreatedArray, 1024 * 768, &(this->rendertargetview->texture2d->data[0][0]));
 }
 void DeviceContext::ClearDepthView()
 {
-	for (int x = 0; x < 1024; x++) {
-		for (int y = 0; y < 768; y++) {
-			this->depthstencilview->texture2d->data[x][y] = COLOR(INT_MAX, 0, 0, 0);
-		}
+	static COLOR precreatedDepthArray[1024 * 768];
+	static bool depthInitialized = false;
+
+	if (!depthInitialized) {
+		// Fill the array with the initial depth values
+		std::fill_n(precreatedDepthArray, 1024 * 768, COLOR(INT_MAX, 0, 0, 0));
+		depthInitialized = true; // Only initialize the array once
 	}
+
+	// Copy the precreated array to the depth buffer
+	std::copy_n(precreatedDepthArray, 1024 * 768, &(this->depthstencilview->texture2d->data[0][0]));
 }
 void DeviceContext::Clearnormaltexture()
 {
-	for (int x = 0; x < 1024; x++) {
-		for (int y = 0; y < 768; y++) {
-			this->normaltexturesource.data[x][y] = COLOR(127, 127, 255, 0);
-		}
+	static COLOR precreatedNormalArray[1024 * 768];
+	static bool normalInitialized = false;
+
+	if (!normalInitialized) {
+		// Fill the array with the initial normal texture values
+		std::fill_n(precreatedNormalArray, 1024 * 768, COLOR(127, 127, 255, 0));
+		normalInitialized = true; // Only initialize the array once
 	}
+
+	// Copy the precreated array to the normal texture buffer
+	std::copy_n(precreatedNormalArray, 1024 * 768, &(this->normaltexturesource.data[0][0]));
 }
+//void DeviceContext::ClearDepthView()
+//{
+//	for (int x = 0; x < 1024; x++) {
+//		for (int y = 0; y < 768; y++) {
+//			this->depthstencilview->texture2d->data[x][y] = COLOR(INT_MAX, 0, 0, 0);
+//		}
+//	}
+//}
+//void DeviceContext::Clearnormaltexture()
+//{
+//	for (int x = 0; x < 1024; x++) {
+//		for (int y = 0; y < 768; y++) {
+//			this->normaltexturesource.data[x][y] = COLOR(127, 127, 255, 0);
+//		}
+//	}
+//}
 void DeviceContext::ClearState()
 {
 

@@ -208,13 +208,13 @@ HRESULT InitDevice()
 	//加载贴图
 	g_pImmediateContext->Clearnormaltexture();
 	//g_pImmediateContext->normaltexturesource.readTGA("");
-	g_pImmediateContext->texturesource.readTGA("1.1.tga");
-	g_pImmediateContext->texturesource.LoadTexture(L"redlol.dds", 100,100);
+	//g_pImmediateContext->texturesource.readTGA("ModelResources/1.1.tga");
+	//g_pImmediateContext->texturesource.LoadTexture(L"ModelResources/redlol.dds", 100,100);
 	//加载模型文件
 	hr = g_pd3dDevice->CreateMesh(&g_mesh);
 	if (FAILED(hr))
 		return hr;
-	ReadObjFile("lion.obj", g_mesh);
+	ReadObjFile("ModelResources/Cube.obj", g_mesh);
 	g_pImmediateContext->SetMesh(g_mesh);
 	return S_OK;
 }

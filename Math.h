@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include<math.h>
 #include<iostream>
 
@@ -98,7 +98,7 @@ MATRIX MatrixPerspectiveLH(float fovy, float Aspect, float zn, float zf);
 VECTOR4 Wnormalization(VECTOR4* pv);
 
 VECTOR3 Vec4toVec2d(VECTOR4 vec4);
-float CalPlanePointZ(VECTOR4 v1, VECTOR4 v2, VECTOR4 v3, VECTOR4 vp);//ÒÑÖªÈıµã×ø±ê£¬ ÇóÃæÉÏÁíÒ»µãÒÑÖªx£¬yµÄ×ø±êµÄz
+float CalPlanePointZ(VECTOR4 v1, VECTOR4 v2, VECTOR4 v3, VECTOR4 vp);//å·²çŸ¥ä¸‰ç‚¹åæ ‡ã€‚æ±‚é¢ä¸Šå¦ä¸€ç‚¹å·²çŸ¥xã€yçš„åæ ‡z
 VECTOR4 BarycentricCoordinate(VECTOR4 a, VECTOR4 b, VECTOR4 c, VECTOR4 point);
 
 float CalTriangleArea(VECTOR4 a, VECTOR4 b, VECTOR4 c);
